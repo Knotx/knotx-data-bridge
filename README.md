@@ -8,7 +8,7 @@ In order to use data from external data sources you need to create an Knot.x [Fr
 The fragments caries out a set of data source names to be used in your markup.
 These names are to be used as variables under which you can find your data.
 
-Data bridge binds those data source names with the Knot.x [data source adapters](#Data Sources Adapters) (that retrieves data from the any kind of sources).
+Data bridge binds those data source names with the Knot.x [data source adapters](#data-source-adapters) (that retrieves data from the any kind of sources).
 
 Data source binding consists of unique name, parameters and a data source adapter address.:
 ```hocon
@@ -111,6 +111,7 @@ It's also possible that there are multiple fragments on the page, each using sam
 Knot.x Data Bridge does caching results of Adapter calls to avoid multiple calls for the same data. 
 Caching is performed within page request scope, this means another request will not get cached data.
 
+<span id="data-source-adapters"></span>
 ## Data Sources Adapters
 Data Sources Adapter is Component of a system, that mediate communication between Knot.x Data Bridge Knot and external 
 services that deliver data injected into template. In short, Data Sources Adapter acts as a element 
