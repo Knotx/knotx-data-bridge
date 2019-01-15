@@ -8,7 +8,7 @@ In order to use data from external data sources you need to create an Knot.x [Fr
 The fragments caries out a set of data source names to be used in your markup.
 These names are to be used as variables under which you can find your data.
 
-Data bridge binds those data source names with the Knot.x [data source adapters](#Data Sources Adapters) (that retrieves data from the any kind of sources).
+Data bridge binds those data source names with the Knot.x [Data Dource Adapters](#data-source-adapters) (that retrieves data from the any kind of sources).
 
 Data source binding consists of unique name, parameters and a data source adapter address.:
 ```hocon
@@ -52,7 +52,7 @@ Let's see the configuration above. There are four data source definitions:
 You can easily define your own business logic that for example fetches employees coming from the REST service,
 then for all directors checks their transactions using the SOAP service and finally validates salaries based
 on data from the PostgreSQL database. It can be easily hidden in the custom Adapter, see
-more details in the Data Sources Adapters section.
+more details in the [Data Dource Adapters](#data-source-adapters) section.
 
 Let's concentrate for now on the first simplest case - fetching employees from the HTTP REST service. The
 data source definition looks like:
@@ -104,6 +104,20 @@ The data source parameters can be also configured in Fragment and merged with de
 the `databridge-params-{NAMESPACE}={JSON DATA}` attribute. The attribute is matched with the data
 source definition based on a namespace.
 
+## Fallback
+  You can define fallback attribute for <knotx:snippet>` definition
+  
+  ```html
+  <knotx:snippet knots="databridge"
+    ...
+    fallback="fallback_id"
+    type="text/knotx-snippet">
+    ...
+  </knotx:snippet>
+  ```
+Once [Data Dource Adapter](#data-source-adapters) throw an exception or returns status code 500 or higher Knot.x Bridge will treat such Fragment as failed.
+
+
 ## Data Source Calls Caching
 
 Template might consists of more than one Data Source Adapter call. 
@@ -154,6 +168,7 @@ It uses [Vert.x Web Client](https://vertx.io/docs/vertx-web-client/java/)
 
 #### Contract
 It requires mandatory parameter `path` when the definition of service is created
+
 
 #### How to configure 
 

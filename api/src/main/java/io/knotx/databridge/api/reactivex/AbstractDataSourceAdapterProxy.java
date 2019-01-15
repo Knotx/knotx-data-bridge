@@ -54,6 +54,10 @@ public abstract class AbstractDataSourceAdapterProxy implements DataSourceAdapte
   protected DataSourceAdapterResponse getErrorResponse(Throwable error) {
     return new DataSourceAdapterResponse().setResponse(new ClientResponse()
         .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
-        .setBody(Buffer.buffer(error.getMessage())));
+        .setBody(Buffer.buffer(errorBody(error.getMessage()))));
+  }
+
+  private String errorBody(String errorMessage){
+    return "{\"errorMessage\":\"" + errorMessage + "\"}";
   }
 }
