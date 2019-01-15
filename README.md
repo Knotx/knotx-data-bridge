@@ -124,8 +124,9 @@ Caching is performed within page request scope, this means another request will 
 
 <span id="data-source-adapters"></span>
 ## Data Sources Adapters
+
 Data Sources Adapter is Component of a system, that mediate communication between Knot.x Data Bridge Knot and external 
-services that deliver data injected into template. In short, Data Sources Adapter acts as a element 
+services that deliver data injected into HTML template. In short, Data Sources Adapter acts as a element 
 translating messages between external services and Knots.
 
 Data Sources Adapter accepts message of type `DataSourceAdapterRequest` with the following data:
