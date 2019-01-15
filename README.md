@@ -105,7 +105,7 @@ the `databridge-params-{NAMESPACE}={JSON DATA}` attribute. The attribute is matc
 source definition based on a namespace.
 
 ## Fallback
-  You can define fallback attribute for <knotx:snippet>` definition
+  You can define fallback attribute for `<knotx:snippet>` definition
   
   ```html
   <knotx:snippet knots="databridge"
