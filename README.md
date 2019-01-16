@@ -104,19 +104,21 @@ The data source parameters can be also configured in Fragment and merged with de
 the `databridge-params-{NAMESPACE}={JSON DATA}` attribute. The attribute is matched with the data
 source definition based on a namespace.
 
-## Fallback
-  You can define fallback attribute for `<knotx:snippet>` definition
-  
-  ```html
-  <knotx:snippet knots="databridge"
-    ...
-    fallback="fallback_id"
-    type="text/knotx-snippet">
-    ...
-  </knotx:snippet>
-  ```
-Once [Data Dource Adapter](#data-source-adapters) throw an exception or returns status code 500 or higher Knot.x Bridge will treat such Fragment as failed.
-
+## Fallback mechanism
+The fallback mechanism allows you to handle errors when fragment processing. The Data Bridge module retrieves data from various data sources using [Data Source Adapters](#data-source-adapters). 
+If any adapter throws an exception or responds with status code `500` or higher, then Knot.x Bridge marks the entire fragment as unsuccessful.
+    
+See the example below:
+```html
+<knotx:snippet knots="databridge" 
+  databridge-name="employees-rest-service"
+  databridge-name-mysalaries="salaries-db-source"
+  fallback="my_fallback_id"
+  type="text/knotx-snippet">
+   ... some content ...
+</knotx:snippet>
+```
+The Data Bridge asynchronously invokes `employees-rest-service` and `salaries-db-source` adapters asynchronously. If the `salaries-db-source` adapter responds with error *500*, then the entire fragment  will be marked as unsuccessful (even if the `employees-rest-service` adapter responds with status code 200).
 
 ## Data Source Calls Caching
 

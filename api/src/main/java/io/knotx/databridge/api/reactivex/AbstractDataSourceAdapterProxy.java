@@ -25,6 +25,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 
@@ -54,10 +55,14 @@ public abstract class AbstractDataSourceAdapterProxy implements DataSourceAdapte
   protected DataSourceAdapterResponse getErrorResponse(Throwable error) {
     return new DataSourceAdapterResponse().setResponse(new ClientResponse()
         .setStatusCode(HttpResponseStatus.INTERNAL_SERVER_ERROR.code())
-        .setBody(Buffer.buffer(errorBody(error.getMessage()))));
+        .setBody(Buffer.buffer(errorBody(error))));
   }
 
-  private String errorBody(String errorMessage){
-    return "{\"errorMessage\":\"" + errorMessage + "\"}";
+  private String errorBody(Throwable error){
+    return jsonErrorBody(error).encode();
+  }
+
+  private JsonObject jsonErrorBody(Throwable error){
+    return new JsonObject().put("errorMessage", error.getMessage());
   }
 }
