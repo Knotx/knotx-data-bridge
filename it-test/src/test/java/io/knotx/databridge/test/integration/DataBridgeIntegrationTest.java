@@ -18,14 +18,12 @@ package io.knotx.databridge.test.integration;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static io.knotx.dataobjects.KnotTaskStatus.FAILURE;
 import static io.knotx.junit5.util.RequestUtil.subscribeToResult_shouldSucceed;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.knotx.dataobjects.ClientRequest;
 import io.knotx.dataobjects.Fragment;
 import io.knotx.dataobjects.KnotContext;
-import io.knotx.dataobjects.KnotTaskStatus;
 import io.knotx.junit5.KnotxApplyConfiguration;
 import io.knotx.junit5.KnotxExtension;
 import io.knotx.junit5.wiremock.KnotxWiremock;
@@ -41,7 +39,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -61,7 +58,7 @@ public class DataBridgeIntegrationTest {
 
     mockDataSource();
 
-    callWithAssertions(context, vertx, "template-engine/one-snippet-fragment/fragment1.txt",
+    callWithAssertions(context, vertx, "template-engine/one-snippet-fragment/fragment-valid.txt",
         knotContext -> {
           Assertions.assertTrue(
               knotContext.getFragments().iterator().next().context().containsKey("_result"));
@@ -78,7 +75,7 @@ public class DataBridgeIntegrationTest {
       throws IOException, URISyntaxException {
 
     mockInvalidDataSource();
-    callWithAssertions(context, vertx, "template-engine/one-snippet-fragment/fragment2.txt", "fallback",
+    callWithAssertions(context, vertx, "template-engine/one-snippet-fragment/fragment-invalid.txt", "fallback",
         knotContext -> {
           Assertions.assertTrue(
               knotContext.getFragments().iterator().next().failed());
