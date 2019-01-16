@@ -115,7 +115,6 @@ public class FragmentProcessor {
 
   private FragmentContext handleError(FragmentContext fragmentContext, KnotContext request, Throwable t) {
     LOGGER.error("Fragment processing failed. Cause:{}\nRequest:\n{}\nFragmentContext:\n{}\n", t.getMessage(), request.getClientRequest(), fragmentContext);
-    fragmentContext.fragment().failure(SUPPORTED_FRAGMENT_ID, t);
     storeErrorInFragment(fragmentContext, t);
     if (fragmentContext.fragment().fallback().isPresent()) {
       return fragmentContext;
