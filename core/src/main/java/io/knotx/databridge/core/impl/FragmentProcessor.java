@@ -68,12 +68,12 @@ public class FragmentProcessor {
 
   private void processStatusCode(JsonObject serviceResult, FragmentContext fragmentContext, DataSourceEntry serviceEntry){
     int statusCode = serviceEngine.retrieveStatusCode(serviceResult);
-    if(!isValidStatusCode(statusCode)){
+    if(isInvalid(statusCode)){
       storeErrorInFragment(fragmentContext, new IllegalStateException(String.format("%s data-source error. Status code returned by adapter is %d", serviceEntry.getName(), statusCode)));
     }
   }
-  private boolean isValidStatusCode(int statusCode){
-    return statusCode < INTERNAL_SERVER_ERROR.code();
+  private boolean isInvalid(int statusCode){
+    return statusCode >= INTERNAL_SERVER_ERROR.code();
   }
   private Single<JsonObject> fetchServiceData(KnotContext request, DataSourceEntry service) {
     LOGGER.debug("Fetching data from service {} {}", service.getAddress(), service.getParams());
