@@ -8,7 +8,7 @@ In order to use data from external data sources you need to create an Knot.x [Fr
 The fragments caries out a set of data source names to be used in your markup.
 These names are to be used as variables under which you can find your data.
 
-Data bridge binds those data source names with the Knot.x [data source adapters](#Data Sources Adapters) (that retrieves data from the any kind of sources).
+Data bridge binds those data source names with the Knot.x [Data Dource Adapters](#data-source-adapters) (that retrieves data from the any kind of sources).
 
 Data source binding consists of unique name, parameters and a data source adapter address.:
 ```hocon
@@ -52,7 +52,7 @@ Let's see the configuration above. There are four data source definitions:
 You can easily define your own business logic that for example fetches employees coming from the REST service,
 then for all directors checks their transactions using the SOAP service and finally validates salaries based
 on data from the PostgreSQL database. It can be easily hidden in the custom Adapter, see
-more details in the Data Sources Adapters section.
+more details in the [Data Dource Adapters](#data-source-adapters) section.
 
 Let's concentrate for now on the first simplest case - fetching employees from the HTTP REST service. The
 data source definition looks like:
@@ -103,6 +103,23 @@ The final Fragment Context for our example looks like:
 The data source parameters can be also configured in Fragment and merged with default ones using
 the `databridge-params-{NAMESPACE}={JSON DATA}` attribute. The attribute is matched with the data
 source definition based on a namespace.
+
+<span id="fallback-mechanism"></span>
+## Fallback mechanism
+The fallback mechanism allows you to handle errors when fragment processing. The Data Bridge module retrieves data from various data sources using [Data Source Adapters](#data-source-adapters). 
+If any adapter throws an exception or responds with status code `500` or higher, then Knot.x Bridge marks the entire fragment as unsuccessful.
+    
+See the example below:
+```html
+<knotx:snippet knots="databridge" 
+  databridge-name="employees-rest-service"
+  databridge-name-mysalaries="salaries-db-source"
+  fallback="my_fallback_id"
+  type="text/knotx-snippet">
+   ... some content ...
+</knotx:snippet>
+```
+The Data Bridge asynchronously invokes `employees-rest-service` and `salaries-db-source` adapters asynchronously. If the `salaries-db-source` adapter responds with error *500*, then the entire fragment  will be marked as unsuccessful (even if the `employees-rest-service` adapter responds with status code 200).
 
 ## Data Source Calls Caching
 
@@ -161,6 +178,7 @@ It uses [Vert.x Web Client](https://vertx.io/docs/vertx-web-client/java/)
 
 #### Contract
 It requires mandatory parameter `path` when the definition of service is created
+
 
 #### How to configure 
 

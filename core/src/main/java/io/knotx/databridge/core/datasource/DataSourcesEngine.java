@@ -63,7 +63,7 @@ public class DataSourcesEngine {
         .setParams(serviceEntry.getParams());
 
     return adapters.get(serviceEntry.getAddress()).rxProcess(adapterRequest)
-        .map(resp -> buildResultObject(adapterRequest, resp));
+        .map(adapterResponse -> buildResultObject(adapterRequest, adapterResponse));
   }
 
   public DataSourceEntry mergeWithConfiguration(final DataSourceEntry serviceEntry) {
@@ -82,6 +82,11 @@ public class DataSourcesEngine {
           LOGGER.error("Missing service configuration for: {}", serviceEntry.getName());
           return new IllegalStateException("Missing service configuration");
         });
+  }
+
+  public int retrieveStatusCode(JsonObject serviceResult){
+    return Integer.parseInt(serviceResult.getJsonObject(RESPONSE_NAMESPACE_KEY)
+                                         .getString("statusCode"));
   }
 
   private JsonObject buildResultObject(DataSourceAdapterRequest adapterRequest,
