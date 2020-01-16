@@ -68,5 +68,69 @@ Table below shows the behaviour of HttpAction depending on provided `responseOpt
 | application/text | false     | JSON           | JSON | _error     | -        |
 | application/text | true      | JSON           | JSON | _error     | -        |
 
+### Node log
+HTTP Action adds details about the request, response and occurred errors to [node log](https://github.com/Knotx/knotx-fragments/tree/master/handler/engine#node-log). 
+If the log level is `ERROR`, then only failing situations are logged: exception occurs during processing, response predicate is not valid, or status code is not between 200 and 300. 
+For the `INFO` log level all items are logged.
+
+Node log is presented as `JSON` and has the following structure:
+```json
+{
+  "request": REQUEST_DATA,
+  "response": RESPONSE_DATA,
+  "responseBody": RESPONSE_BODY,
+  "errors": LIST_OF_ERRORS
+}
+```
+`REQUEST_DATA` contains the following entries:
+ ```json
+{
+  "path": "/api/endpoint",
+  "requestHeaders": {
+    "Content-Type": "application/json"
+  }
+}
+```
+`RESPONSE_DATA` contains the following entries:
+```json
+{
+  "httpVersion": "HTTP_1_1",
+  "statusCode": "200",
+  "statusMessage": "OK",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "trailers": {
+  },
+  "httpMethod": "GET",
+  "requestPath": "http://localhost/api/endpoint"
+}
+```
+`RESPONSE_BODY` contains the response received from service, it's text value.
+
+`LIST_OF_ERRORS` looks like the following:
+```json
+[
+  {
+    "className": "io.vertx.core.eventbus.ReplyException",
+    "message": "Expect content type application/text to be one of application/json"
+  },
+  {
+    "className": "some other exception...",
+    "message": "some other message..."
+  }
+]
+```
+The table below presents expected entries in node log on particular log levels depending on service response:
+
+| Response                                   | Log level  | Log entries   |
+| ------------------------------------------ | ---------- | ------------------------------------------ |
+| `_success`                                 | INFO       | REQUEST_DATA, RESPONSE_DATA, RESPONSE_BODY |
+| `_success`                                 | ERROR      |                                            |
+| exception occurs and `_error`              | INFO       | REQUEST_DATA, LIST_OF_ERRORS               |
+| exception occurs and `_error`              | ERROR      | REQUEST_DATA, LIST_OF_ERRORS               |
+| `_error` (e.g service responds with `500`) | INFO       | REQUEST_DATA, RESPONSE_DATA, RESPONSE_BODY |
+| `_error` (e.g service responds with `500`) | INFO       | REQUEST_DATA, RESPONSE_DATA                |
+
 ### Detailed configuration
 All configuration options are explained in details in the [Config Options Cheetsheet](https://github.com/Knotx/knotx-data-bridge/tree/master/http/action/docs/asciidoc/dataobjects.adoc).

@@ -27,24 +27,17 @@ public class HttpActionOptions {
 
   private static final long DEFAULT_REQUEST_TIMEOUT = 0L;
 
-  private WebClientOptions webClientOptions;
-  private EndpointOptions endpointOptions;
-  private ResponseOptions responseOptions;
-  private long requestTimeoutMs;
+  private WebClientOptions webClientOptions = new WebClientOptions();
+  private EndpointOptions endpointOptions = new EndpointOptions();
+  private ResponseOptions responseOptions = new ResponseOptions();
+  private long requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT;
+  private String logLevel;
 
   public HttpActionOptions() {
-    init();
   }
 
   public HttpActionOptions(JsonObject json) {
-    init();
     HttpActionOptionsConverter.fromJson(json, this);
-  }
-
-  private void init() {
-    webClientOptions = new WebClientOptions();
-    responseOptions = new ResponseOptions();
-    requestTimeoutMs = DEFAULT_REQUEST_TIMEOUT;
   }
 
   public WebClientOptions getWebClientOptions() {
@@ -53,8 +46,8 @@ public class HttpActionOptions {
 
   /**
    * Set the {@code WebClientOptions} used by the HTTP client to communicate with remote http
-   * endpoint. See https://vertx.io/docs/vertx-web-client/dataobjects.html#WebClientOptions for
-   * the details what can be configured.
+   * endpoint. See https://vertx.io/docs/vertx-web-client/dataobjects.html#WebClientOptions for the
+   * details what can be configured.
    *
    * @param webClientOptions {@link WebClientOptions} object
    * @return a reference to this, so the API can be used fluently
@@ -105,6 +98,21 @@ public class HttpActionOptions {
     return this;
   }
 
+  public String getLogLevel() {
+    return logLevel;
+  }
+
+  /**
+   * Set level of action logs.
+   *
+   * @param logLevel alevel of action logs
+   * @return a reference to this, so the API can be used fluently
+   */
+  public HttpActionOptions setLogLevel(String logLevel) {
+    this.logLevel = logLevel;
+    return this;
+  }
+
   @Override
   public String toString() {
     return "HttpActionOptions{" +
@@ -112,6 +120,7 @@ public class HttpActionOptions {
         ", endpointOptions=" + endpointOptions +
         ", responseOptions=" + responseOptions +
         ", requestTimeoutMs=" + requestTimeoutMs +
+        ", logLevel=" + logLevel +
         '}';
   }
 }

@@ -16,6 +16,7 @@
 package io.knotx.databridge.http.action;
 
 import io.netty.handler.codec.http.HttpResponseStatus;
+import io.vertx.core.http.HttpVersion;
 import io.vertx.reactivex.core.MultiMap;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.web.client.HttpResponse;
@@ -24,7 +25,9 @@ class EndpointResponse {
 
   private final HttpResponseStatus statusCode;
   private String statusMessage;
+  private HttpVersion httpVersion;
   private MultiMap headers = MultiMap.caseInsensitiveMultiMap();
+  private MultiMap trailers = MultiMap.caseInsensitiveMultiMap();
   private Buffer body;
 
   EndpointResponse(HttpResponseStatus statusCode) {
@@ -34,9 +37,11 @@ class EndpointResponse {
   static EndpointResponse fromHttpResponse(HttpResponse<Buffer> response) {
     EndpointResponse endpointResponse = new EndpointResponse(
         HttpResponseStatus.valueOf(response.statusCode()));
-    endpointResponse.body = getResponsetBody(response);
+    endpointResponse.body = getResponseBody(response);
     endpointResponse.headers = response.headers();
+    endpointResponse.trailers = response.trailers();
     endpointResponse.statusMessage = response.statusMessage();
+    endpointResponse.httpVersion = response.version();
     return endpointResponse;
   }
 
@@ -49,6 +54,10 @@ class EndpointResponse {
     return headers;
   }
 
+  public MultiMap getTrailers() {
+    return trailers;
+  }
+
   public Buffer getBody() {
     return body;
   }
@@ -57,17 +66,23 @@ class EndpointResponse {
     return statusMessage;
   }
 
+  public HttpVersion getHttpVersion() {
+    return httpVersion;
+  }
+
   @Override
   public String toString() {
     return "EndpointResponse{" +
         "statusCode=" + statusCode +
         ", statusMessage='" + statusMessage + '\'' +
+        ", httpVersion=" + httpVersion +
         ", headers=" + headers +
+        ", trailers=" + trailers +
         ", body=" + body +
         '}';
   }
 
-  private static Buffer getResponsetBody(HttpResponse<Buffer> response) {
+  private static Buffer getResponseBody(HttpResponse<Buffer> response) {
     if (response.body() != null) {
       return response.body();
     } else {
