@@ -60,6 +60,7 @@ subprojects { subproject ->
     compile 'io.vertx:vertx-rx-java2'
 
     compileOnly 'io.vertx:vertx-codegen'
+    compileOnly 'io.vertx:vertx-rx-java2-gen'
 
     // Test dependencies
     testCompile 'org.junit.jupiter:junit-jupiter-api'
@@ -76,6 +77,9 @@ subprojects { subproject ->
     testCompile 'io.vertx:vertx-junit5'
     testCompile 'io.knotx:knotx-mocks'
     testCompile 'io.knotx:knotx-junit5'
+
+    annotationProcessor 'io.vertx:vertx-codegen'
+    annotationProcessor 'io.vertx:vertx-service-proxy'
   }
 
   sourceSets {
@@ -97,7 +101,7 @@ subprojects { subproject ->
 
   task annotationProcessing(type: JavaCompile, group: 'build') { // codegen
     source = sourceSets.main.java
-    classpath = configurations.compile + configurations.compileOnly
+    classpath = configurations.compile + configurations.compileOnly + configurations.annotationProcessor
     destinationDir = project.file('src/main/generated')
     options.compilerArgs = [
         "-proc:only",
