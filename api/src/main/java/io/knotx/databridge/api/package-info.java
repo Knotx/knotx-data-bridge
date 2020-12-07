@@ -13,19 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@ModuleGen(name = "knotx-databridge-api", groupPackage = "io.knotx")
+package io.knotx.databridge.api;
 
-description = "Knot.x Data Bridge Core"
-
-compileJava.dependsOn annotationProcessing
-
-configurations {
-    testResources
-}
-
-dependencies {
-  api project(':knotx-databridge-api')
-  testImplementation group: 'io.knotx', name: 'knotx-core', version: "${project.version}", classifier: 'tests'
-  testResources sourceSets.test.output
-}
-
-
+import io.vertx.codegen.annotations.ModuleGen;

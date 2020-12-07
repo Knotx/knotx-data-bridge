@@ -15,7 +15,6 @@
  */
 
 plugins {
-  id 'io.spring.dependency-management' version '1.0.5.RELEASE' apply false
   id 'maven'
 }
 
@@ -35,7 +34,6 @@ subprojects { subproject ->
   group = 'io.knotx'
 
   apply plugin: 'java-library'
-  apply plugin: 'io.spring.dependency-management'
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
@@ -46,40 +44,34 @@ subprojects { subproject ->
     options.incremental = true
   }
 
-  dependencyManagement {
-    imports {
-      mavenBom "io.knotx:knotx-dependencies:${project.version}"
-    }
-  }
-
   dependencies {
-    compile 'io.knotx:knotx-core'
+    implementation platform("io.knotx:knotx-dependencies:${project.version}")
+    api 'io.knotx:knotx-core'
 
-    compile 'io.vertx:vertx-core'
-    compile 'io.vertx:vertx-service-proxy'
-    compile 'io.vertx:vertx-rx-java2'
+    implementation 'io.vertx:vertx-core'
+    implementation 'io.vertx:vertx-service-proxy'
+    implementation 'io.vertx:vertx-rx-java2'
+    implementation 'io.vertx:vertx-codegen'
+    implementation 'io.vertx:vertx-rx-java2-gen'
 
-    compileOnly 'io.vertx:vertx-codegen'
-    compileOnly 'io.vertx:vertx-rx-java2-gen'
+    annotationProcessor group: "io.vertx", name: "vertx-codegen", version: "3.9.0", classifier: "processor"
+    annotationProcessor group: "io.vertx", name: "vertx-service-proxy", version: "3.9.0", classifier: "processor"
+    annotationProcessor group: "io.vertx", name: "vertx-rx-java2-gen", version: "3.9.0"
 
     // Test dependencies
-    testCompile 'org.junit.jupiter:junit-jupiter-api'
-    testCompile 'org.junit.jupiter:junit-jupiter-engine'
-    testCompile 'org.junit.jupiter:junit-jupiter-params'
-    testCompile 'org.junit.jupiter:junit-jupiter-migrationsupport'
-    testCompile 'org.junit.vintage:junit-vintage-engine'
-    testCompile 'uk.co.datumedge:hamcrest-json'
-    testCompile 'org.hamcrest:hamcrest-all'
-    testCompile 'com.github.tomakehurst:wiremock'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
+    testImplementation 'org.junit.jupiter:junit-jupiter-migrationsupport'
+    testImplementation 'org.junit.vintage:junit-vintage-engine'
+    testImplementation 'uk.co.datumedge:hamcrest-json'
+    testImplementation 'org.hamcrest:hamcrest-all'
+    testImplementation 'com.github.tomakehurst:wiremock'
 
-    testCompileOnly 'io.vertx:vertx-codegen'
-    testCompile 'io.vertx:vertx-config'
-    testCompile 'io.vertx:vertx-junit5'
-    testCompile 'io.knotx:knotx-mocks'
-    testCompile 'io.knotx:knotx-junit5'
-
-    annotationProcessor 'io.vertx:vertx-codegen'
-    annotationProcessor 'io.vertx:vertx-service-proxy'
+    testImplementation 'io.vertx:vertx-config'
+    testImplementation 'io.vertx:vertx-junit5'
+    testImplementation 'io.knotx:knotx-mocks'
+    testImplementation 'io.knotx:knotx-junit5'
   }
 
   sourceSets {
@@ -101,7 +93,8 @@ subprojects { subproject ->
 
   task annotationProcessing(type: JavaCompile, group: 'build') { // codegen
     source = sourceSets.main.java
-    classpath = configurations.compile + configurations.compileOnly + configurations.annotationProcessor
+    options.annotationProcessorPath = configurations.annotationProcessor
+    classpath = configurations.compileClasspath + configurations.runtimeClasspath + fileTree('src/main/resources')
     destinationDir = project.file('src/main/generated')
     options.compilerArgs = [
         "-proc:only",

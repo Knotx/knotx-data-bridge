@@ -19,6 +19,6 @@ description = "Knot.x Data Source Http"
 compileJava.dependsOn annotationProcessing
 
 dependencies {
-    compile project(':knotx-databridge-api')
-    compile "io.vertx:vertx-web-client"
+    api project(':knotx-databridge-api')
+    implementation "io.vertx:vertx-web-client"
 }

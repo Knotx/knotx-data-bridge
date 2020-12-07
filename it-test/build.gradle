@@ -17,12 +17,12 @@
 description = "Knot.x Data Bridge Integration Tests"
 
 dependencies {
-  compile project(':knotx-databridge-core')
-  compile project(':knotx-databridge-adapter-http')
+  implementation project(':knotx-databridge-core')
+  implementation project(':knotx-databridge-adapter-http')
 
-  compile "io.vertx:vertx-web-client"
+  implementation "io.vertx:vertx-web-client"
 
-  testCompile project(path: ':knotx-databridge-core', configuration: 'testResources')
+  testImplementation project(path: ':knotx-databridge-core', configuration: 'testResources')
 }
 
 sourceSets {
